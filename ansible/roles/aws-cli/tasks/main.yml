@@ -1,0 +1,16 @@
+---
+# tasks file for aws-cli
+- name: Download and unzip awscliv2.zip file
+  unarchive:
+    src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: /tmp
+    remote_src: yes
+
+- name: Install aws-cli version 2
+  command: sudo /tmp/aws/install
+
+- name: Remove awscliv2.zip file
+  file:
+    path: /tmp/aws/awscliv2.zip
+    state: absent
+

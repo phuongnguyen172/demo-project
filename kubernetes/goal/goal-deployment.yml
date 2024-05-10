@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goal-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: goal-nodejs
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 300
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: goal-nodejs
+    spec:
+      containers:
+        - name: goal-nodejs
+          image: phuongnguyen17/goal.nodejs:8
+          ports:
+            - containerPort: 80

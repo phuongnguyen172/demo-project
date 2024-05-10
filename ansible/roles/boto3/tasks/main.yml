@@ -1,0 +1,6 @@
+---
+# tasks file for boto3
+- name: Install boto3 using pip3
+  pip:
+    name: boto3
+    state: present

@@ -1,0 +1,58 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-demo
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: goal.poeta.click
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: goal-service
+            port:
+              number: 80
+  - host: tkb.poeta.click
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tkb-service
+            port:
+              number: 80
+  - host: poeta.click
+    http:
+      paths:
+      - path: /goal
+        pathType: Prefix
+        backend:
+          service:
+            name: goal-service
+            port:
+              number: 80
+      - path: /tkb
+        pathType: Prefix
+        backend:
+          service:
+            name: tkb-service
+            port:
+              number: 80
+  - host: localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: goal-service
+            port:
+              number: 80
+
+    

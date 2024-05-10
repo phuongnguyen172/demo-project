@@ -1,0 +1,44 @@
+---
+- name: Setup Kubernetes Worker
+  hosts: KubernetesWorker
+  become: true
+  remote_user: ubuntu
+  
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+
+  roles:
+    - nginx
+    - kubernetes
+
+  handlers:
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+  tasks:
+    - name: Join Kubernetes cluster
+      block:
+      tags:
+        - kubernetes-config
+
+    - name: Config Nginx
+      block:
+        - name: Add site config for goal.poeta.click
+          template:
+            src: sites-config/goal.conf.j2
+            dest: /etc/nginx/sites-enabled/goal.conf
+          notify:
+            - Restart nginx
+
+        - name: Add site config for tkb.poeta.click
+          template:
+            src: sites-config/tkb.conf.j2
+            dest: /etc/nginx/sites-enabled/tkb.conf
+          notify:
+            - Restart nginx
+      tags:
+        - nginx-config

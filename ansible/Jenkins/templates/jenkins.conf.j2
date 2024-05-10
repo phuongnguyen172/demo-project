@@ -1,0 +1,16 @@
+<VirtualHost *:80>
+    ServerName jenkins.poeta.click
+    ServerAlias jenkins.poeta.click
+
+    <Proxy http://127.0.0.1:8080/>
+      Order deny,allow
+      Allow from all
+    </Proxy>
+
+    ProxyPass         /  http://127.0.0.1:8080/ nocanon
+    ProxyPassReverse  /  http://127.0.0.1:8080/
+    ProxyPassReverse  /  http://jenkins.poeta.click/
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

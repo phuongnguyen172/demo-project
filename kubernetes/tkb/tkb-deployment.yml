@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tkb-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tkb-app
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 300
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: tkb-app
+    spec:
+      containers:
+        - name: tkb-container
+          image: nigelpoulton/k8sbook:1.0
+          ports:
+            - containerPort: 8080
