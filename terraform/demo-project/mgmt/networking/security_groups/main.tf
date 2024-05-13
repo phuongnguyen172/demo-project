@@ -43,31 +43,11 @@ resource "aws_security_group" "SG_Jenkins" {
     cidr_blocks = local.all_ips
   }
 
-  egress {
-    from_port   = local.any_port
-    to_port     = local.any_port
-    protocol    = local.any_protocol
-    cidr_blocks = local.all_ips
-  }
-}
-
-resource "aws_security_group" "SG_LB_Kubernetes" {
-  name   = "SG_LB_Kubernetes"
-  vpc_id = data.aws_vpc.default_vpc.id
-
   ingress {
-    description = "Allow access to HTTP port"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = local.all_ips
-  }
-
-  ingress {
-    description = "Allow access to HTTPS port"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "TCP"
     cidr_blocks = local.all_ips
   }
 

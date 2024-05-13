@@ -1,6 +1,6 @@
 ---
 - name: Setup Jenkins server
-  hosts: all
+  hosts: Jenkins
   become: true
   remote_user: ubuntu
 
