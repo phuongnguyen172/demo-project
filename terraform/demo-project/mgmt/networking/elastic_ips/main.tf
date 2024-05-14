@@ -20,7 +20,7 @@ provider "aws" {
   }
 }
 
-resource "aws_eip" "eip_Jenkins" {
+resource "aws_eip" "jenkins" {
   domain = "vpc"
 
   tags = {
@@ -28,7 +28,7 @@ resource "aws_eip" "eip_Jenkins" {
   }
 }
 
-resource "aws_eip" "eip_KubernetesMaster" {
+resource "aws_eip" "kubernetes_master" {
   domain = "vpc"
 
   tags = {
