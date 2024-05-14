@@ -24,7 +24,7 @@ data "aws_vpc" "default_vpc" {
   default = true
 }
 
-data "aws_ami" "ami_Ubuntu22" {
+data "aws_ami" "ami_ubuntu_22" {
   owners = ["099720109477"]
   most_recent = true
 
@@ -44,33 +44,25 @@ data "aws_ami" "ami_Ubuntu22" {
   }
 }
 
-data "terraform_remote_state" "roles" {
-  backend = "local"
-
-  config = {
-    path = "/home/phuongnguyen/D/!Poeta/Study/Infrastructure/terraform/projects/demo/global/iam/roles/terraform.tfstate"
-  }
+data "aws_iam_instance_profile" "kubernetes_worker" {
+  name = "Profile_KubernetesMaster"
 }
 
-data "terraform_remote_state" "security_groups" {
-  backend = "local"
-
-  config = {
-    path = "/home/phuongnguyen/D/!Poeta/Study/Infrastructure/terraform/projects/demo/mgmt/networking/security_groups/terraform.tfstate"
-  }
+data "aws_security_group" "kubernetes_worker" {
+  name = "SG_KubernetesMaster"
 }
 
-module "server_ec2_instance" {
-  source = "bitbucket.org/phuongnguyen17/terraform-modules.server.ec2_instance"
+module "ec2_instance_kubernetes_worker" {
+  source = "../../../../modules/server/ec2_instance"
 
-  ami_id = data.aws_ami.ami_Ubuntu22.id
-  instance_name = "KubernetesMaster"
+  ami_id = data.aws_ami.ami_ubuntu_22.id
+  instance_name = "KubernetesWorker"
   instance_type = "t3a.small"
-  instance_profile = data.terraform_remote_state.roles.outputs.KubernetesWorkerRole_instance_profile
-  security_group_ids = [data.terraform_remote_state.security_groups.outputs.SG_Kubernetes_Worker_id]
+  instance_profile = data.aws_iam_instance_profile.kubernetes_master.name
+  security_group_ids = [data.aws_security_group.kubernetes_master.id]
   subnet_id = "subnet-00d70552010a00c41"
-  private_ip = "172.31.16.21"
+  private_ip = "172.31.16.13"
   key_name = "Demo"
-  volume_size = 8
+  volume_size = 10
   volume_type = "gp2"
 }

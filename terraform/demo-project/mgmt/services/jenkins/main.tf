@@ -55,7 +55,7 @@ data "aws_eip" "jenkins" {
 }
 
 
-module "server_ec2_instance" {
+module "ec2_instance_jenkins" {
   source = "../../../../modules/server/ec2_instance"
   
   ami_id             = data.aws_ami.ami_ubuntu_22.id
@@ -69,6 +69,6 @@ module "server_ec2_instance" {
 }
 
 resource "aws_eip_association" "eip_assoc_Jenkins" {
-  instance_id   = module.server_ec2_instance.instance_id
+  instance_id   = module.ec2_instance_jenkins.instance_id
   allocation_id = data.aws_eip.jenkins.id
 }

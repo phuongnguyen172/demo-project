@@ -59,8 +59,8 @@ resource "aws_security_group" "SG_Jenkins" {
   }
 }
 
-resource "aws_security_group" "SG_Kubernetes_Master" {
-  name   = "SG_Kubernetes_Master"
+resource "aws_security_group" "SG_KubernetesMaster" {
+  name   = "SG_KubernetesMaster"
   vpc_id = data.aws_vpc.default_vpc.id
 
   ingress {
@@ -135,8 +135,8 @@ resource "aws_security_group" "SG_Kubernetes_Master" {
   }
 }
 
-resource "aws_security_group" "SG_Kubernetes_Worker" {
-  name   = "SG_Kubernetes_Worker"
+resource "aws_security_group" "SG_KubernetesWorker" {
+  name   = "SG_KubernetesWorker"
   vpc_id = data.aws_vpc.default_vpc.id
 
   ingress {
