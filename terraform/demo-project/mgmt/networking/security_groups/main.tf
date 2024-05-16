@@ -155,6 +155,14 @@ resource "aws_security_group" "SG_KubernetesWorker" {
     cidr_blocks = local.vpc_ips
   }
 
+  ingress {
+    description = "SSH"
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = local.all_ips
+  }
+
   egress {
     from_port   = local.any_port
     to_port     = local.any_port

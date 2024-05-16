@@ -45,11 +45,11 @@ data "aws_ami" "ami_ubuntu_22" {
 }
 
 data "aws_iam_instance_profile" "kubernetes_worker" {
-  name = "Profile_KubernetesMaster"
+  name = "Profile_KubernetesWorker"
 }
 
 data "aws_security_group" "kubernetes_worker" {
-  name = "SG_KubernetesMaster"
+  name = "SG_KubernetesWorker"
 }
 
 module "ec2_instance_kubernetes_worker" {
@@ -58,8 +58,8 @@ module "ec2_instance_kubernetes_worker" {
   ami_id             = data.aws_ami.ami_ubuntu_22.id
   instance_name      = "KubernetesWorker"
   instance_type      = "t3a.small"
-  instance_profile   = data.aws_iam_instance_profile.kubernetes_master.name
-  security_group_ids = [data.aws_security_group.kubernetes_master.id]
+  instance_profile   = data.aws_iam_instance_profile.kubernetes_worker.name
+  security_group_ids = [data.aws_security_group.kubernetes_worker.id]
   subnet_id          = "subnet-00d70552010a00c41"
   private_ip         = "172.31.16.13"
   key_name           = "Demo"

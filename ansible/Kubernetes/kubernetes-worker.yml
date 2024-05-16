@@ -14,6 +14,4 @@
 
   tasks:
     - name: Join Kubernetes cluster
-      block:
-      tags:
-        - kubernetes-config
+      shell: kubeadm join 172.31.16.12:6443 --token ucsvz9.d5sj3st9pz16yf1o --discovery-token-ca-cert-hash sha256:1031b4fe1a19b6a016d89a14f6699bac923ad026d4f8cd7b26cfce4160d3b79a

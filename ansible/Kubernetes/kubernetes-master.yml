@@ -23,7 +23,7 @@
     - name: Setup Kubernetes cluster
       block:
         - name: Kubeadm init
-          shell: kubeadm init --apiserver-cert-extra-sans=52.54.216.31
+          shell: kubeadm init --apiserver-cert-extra-sans=34.204.137.54
 
         - name: Create .kube directory in /home/ubuntu
           file:
@@ -40,10 +40,10 @@
             owner: ubuntu
             group: ubuntu
 
-        - name: Untaint Kubernetes master node
-          shell: kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-          become: true
-          become_user: ubuntu
+        # - name: Untaint Kubernetes master node
+        #   shell: kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+        #   become: true
+        #   become_user: ubuntu
 
         - name: Set CLI_ARCH variable
           debug: msg="{{ lookup('ansible.builtin.url', 'https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt') }}"
