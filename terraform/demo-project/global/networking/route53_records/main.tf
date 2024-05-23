@@ -34,7 +34,7 @@ resource "aws_route53_record" "goal" {
   zone_id = data.aws_route53_zone.poeta_click.id
   type = "A"
   name = "goal"
-  records = ["23.21.10.102"]
+  records = ["3.218.85.134"]
   ttl = 600
 }
 

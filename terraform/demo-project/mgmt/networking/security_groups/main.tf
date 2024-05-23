@@ -127,6 +127,14 @@ resource "aws_security_group" "SG_KubernetesMaster" {
     cidr_blocks = local.all_ips
   }
 
+  ingress {
+    description = "Cilium VXLAN overlay mode"
+    from_port   = 8472
+    to_port     = 8472
+    protocol    = "UDP"
+    cidr_blocks = local.vpc_ips
+  }
+
   egress {
     from_port   = local.any_port
     to_port     = local.any_port
@@ -157,10 +165,18 @@ resource "aws_security_group" "SG_KubernetesWorker" {
 
   ingress {
     description = "SSH"
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = local.all_ips
+  }
+
+  ingress {
+    description = "Cilium VXLAN overlay mode"
+    from_port   = 8472
+    to_port     = 8472
+    protocol    = "UDP"
+    cidr_blocks = local.vpc_ips
   }
 
   egress {
