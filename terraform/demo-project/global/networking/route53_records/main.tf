@@ -30,13 +30,13 @@ resource "aws_route53_record" "jenkins" {
   ttl     = 600
 }
 
-# resource "aws_route53_record" "goal" {
-#   zone_id = data.aws_route53_zone.poeta_click.id
-#   type = "CNAME"
-#   name = "goal"
-#   records = [data.aws_lb.k8s_load_balancer.dns_name]
-#   ttl = 600
-# }
+resource "aws_route53_record" "goal" {
+  zone_id = data.aws_route53_zone.poeta_click.id
+  type = "A"
+  name = "goal"
+  records = ["23.21.10.102"]
+  ttl = 600
+}
 
 # resource "aws_route53_record" "tkb" {
 #   zone_id = data.aws_route53_zone.poeta_click.id
