@@ -14,4 +14,4 @@
 
   tasks:
     - name: Join Kubernetes cluster
-      shell: kubeadm join 172.31.16.12:6443 --token zg8q37.xc6a3fvk0hyshvi0 --discovery-token-ca-cert-hash sha256:ec76950e8ae95b5b5b9fc4a093900bf8022158d7b064a26974cb7d35ddac3046
+      shell: kubeadm join 172.31.16.12:6443 --token f2pj4z.gitirvvvek3mi2ss --discovery-token-ca-cert-hash sha256:707a86f14bfbcc4b8fe4c105e1b5107f1fac0fa776d931e380abeefbf6443e4c

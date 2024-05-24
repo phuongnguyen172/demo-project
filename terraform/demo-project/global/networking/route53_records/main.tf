@@ -22,6 +22,12 @@ data "aws_eip" "jenkins" {
   }
 }
 
+data "aws_eip" "kubernetes_master" {
+  tags = {
+    Name = "EIP_KubernetesMaster"
+  }
+}
+
 resource "aws_route53_record" "jenkins" {
   zone_id = data.aws_route53_zone.poeta_click.id
   type    = "A"
@@ -34,7 +40,7 @@ resource "aws_route53_record" "goal" {
   zone_id = data.aws_route53_zone.poeta_click.id
   type = "A"
   name = "goal"
-  records = ["3.218.85.134"]
+  records = [data.aws_eip.kubernetes_master.public_ip]
   ttl = 600
 }
 
