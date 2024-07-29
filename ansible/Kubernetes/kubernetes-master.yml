@@ -23,7 +23,7 @@
     - name: Setup Kubernetes cluster
       block:
         - name: Kubeadm init
-          shell: kubeadm init --apiserver-cert-extra-sans=3.217.161.26
+          shell: kubeadm init --apiserver-cert-extra-sans=18.235.58.152
 
         - name: Create .kube directory in /home/ubuntu
           file:

@@ -3,10 +3,9 @@ kind: Service
 metadata:
   name: goal-service
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: goal-nodejs
   ports:
-    - protocol: TCP
+    - targetPort: 80
       port: 80
-      nodePort: 30001

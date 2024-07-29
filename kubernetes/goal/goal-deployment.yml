@@ -25,3 +25,4 @@ spec:
           image: phuongnguyen17/goal.nodejs:8
           ports:
             - containerPort: 80
+      hostNetwork: true

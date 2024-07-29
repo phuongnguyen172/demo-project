@@ -3,9 +3,10 @@ kind: Service
 metadata:
   name: tkb-service
 spec:
-  type: NodePort
-  ports:
-    - port: 8080
-      nodePort: 30002
+  type: ClusterIP
   selector:
     app: tkb-app
+  ports:
+    - targetPort: 8080
+      port: 80
+
