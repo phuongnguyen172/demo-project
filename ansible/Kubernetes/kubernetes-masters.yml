@@ -1,0 +1,21 @@
+- name: Setup Kubernetes Masters
+  hosts: KubernetesMasters
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+
+  tasks:
+    - name: Setup HAproxy and Keepalived
+      block:
+        - name: Install HAproxy
+          ansible.builtin.apt:
+            name: haproxy
+            state: present
+        
+        - name: Install Keepalived
+          ansible.builtin.apt:
+            name: keepalived
+            state: present

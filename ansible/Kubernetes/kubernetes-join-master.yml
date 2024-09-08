@@ -25,7 +25,7 @@
         k8s_join_cmd_var: "{{ k8s_join_cmd.stdout }}"
         k8s_cert_key_var: "{{ k8s_cert_key.stdout }}"
 
-- name: Setup Kubernetes Masters
+- name: Join Kubernetes Masters
   hosts: KubernetesMasters
   become: true
 

@@ -1,0 +1,16 @@
+- name: Setup Kubernetes Workers
+  hosts: KubernetesWorkers
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+
+  tasks:
+    - name: Setup Longhorn storage
+      block:
+        - name: Create longhorn data directory
+          ansible.builtin.file:
+            path: /data/longhorn-storage
+            state: directory

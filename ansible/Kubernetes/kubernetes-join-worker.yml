@@ -13,7 +13,7 @@
         name: "DUMMY_HOST"
         k8s_join_cmd_var: "{{ k8s_join_cmd.stdout }}"
 
-- name: Setup Kubernetes Workers
+- name: Join Kubernetes Workers
   hosts: KubernetesWorkers
   become: true
   
