@@ -1,0 +1,11 @@
+- name: Setup Rancher Server
+  hosts: RancherServer
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+
+  roles:
+    - docker

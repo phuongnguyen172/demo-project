@@ -1,0 +1,72 @@
+---
+- name: Setup Kubernetes First Master
+  hosts: KubernetesFirstMaster
+  become: true
+  
+  vars:
+    control_plane_endpoint: 192.168.30.101
+    cilium_version: 1.16.1
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+
+    - name: Disable swap on ubuntu
+      shell: |
+            swapoff -a  
+            sudo sed -i '/swap/ s/^/#/' /etc/fstab
+
+  roles:
+    - kubernetes
+
+  tasks:
+    - name: Setup Kubernetes cluster
+      block:
+        - name: kubeadm init 
+          shell: kubeadm init --control-plane-endpoint {{ control_plane_endpoint }}
+
+        - name: Create .kube directory in /home/ubuntu
+          file:
+            path: /home/ubuntu/.kube
+            state: directory
+            owner: ubuntu
+            group: ubuntu
+
+        - name: Copy admin.conf to /home/ubuntu/.kube
+          copy:
+            src: /etc/kubernetes/admin.conf
+            remote_src: true
+            dest: /home/ubuntu/.kube/config
+            owner: ubuntu
+            group: ubuntu
+      tags: setup-kubernetes
+
+    - name: Install Cilium
+      block:  
+        - name: Set CLI_ARCH variable
+          debug: msg="{{ lookup('ansible.builtin.url', 'https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt') }}"
+          register: CILIUM_CLI_VERSION
+        
+        - name: Download cilium-cli install file
+          get_url:
+            url: https://github.com/cilium/cilium-cli/releases/download/{{ CILIUM_CLI_VERSION.msg }}/cilium-linux-amd64.tar.gz
+            dest: /home/ubuntu
+            checksum: sha256:https://github.com/cilium/cilium-cli/releases/download/{{ CILIUM_CLI_VERSION.msg }}/cilium-linux-amd64.tar.gz.sha256sum
+
+        - name: Unarchive cilium-cli file to /usr/local/bin
+          unarchive:
+            src: /home/ubuntu/cilium-linux-amd64.tar.gz
+            remote_src: true
+            dest: /usr/local/bin
+
+        - name: Remove cilium-cli file in /home/ubuntu
+          file:
+            path: /home/ubuntu/cilium-linux-amd64.tar.gz
+            state: absent
+
+        - name: Install Cilium
+          shell: cilium install --version {{ cilium_version }}
+          become: true
+          become_user: ubuntu
+      tags: install-cilium

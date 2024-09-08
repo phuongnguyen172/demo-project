@@ -1,0 +1,51 @@
+- name: Get kubeadm join command from Kubernetes First Master
+  hosts: KubernetesFirstMaster
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Print kubeadm join command
+      shell: kubeadm token create --print-join-command
+      register: k8s_join_cmd
+
+    - name: Get certificate key
+      shell: |
+            kubeadm init phase upload-certs --upload-certs > /tmp/certificate_key
+            cat /tmp/certificate_key | tail -n 1 
+      register: k8s_cert_key
+
+    - name: Remove certificate_key file
+      ansible.builtin.file:
+        path: /tmp/certificate_key
+        state: absent
+    
+    - name: Register dummy host with variable
+      ansible.builtin.add_host:
+        name: "DUMMY_HOST"
+        k8s_join_cmd_var: "{{ k8s_join_cmd.stdout }}"
+        k8s_cert_key_var: "{{ k8s_cert_key.stdout }}"
+
+- name: Setup Kubernetes Masters
+  hosts: KubernetesMasters
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+
+    - name: Disable swap on ubuntu
+      shell: |
+            sudo swapoff -a  
+            sudo sed -i '/swap/ s/^/#/' /etc/fstab
+  
+  roles:
+    - kubernetes
+
+  tasks:
+    - name: Join Kubernetes Masters
+      shell: "{{ hostvars.DUMMY_HOST.k8s_join_cmd_var }} --control-plane --certificate-key {{ hostvars.DUMMY_HOST.k8s_cert_key_var }}"
+      register: join_command_result
+      failed_when: 
+        - join_command_result.rc != 0
+        - "'/etc/kubernetes/kubelet.conf already exists' not in join_command_result.stderr"
