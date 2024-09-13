@@ -342,17 +342,24 @@ alertmanager:
       - target_matchers:
           - 'alertname = InfoInhibitor'
     route:
-      group_by: ['namespace']
-      group_wait: 30s
-      group_interval: 5m
-      repeat_interval: 12h
-      receiver: 'null'
+      group_by: ['namespace', 'job']
+      group_wait: 5s
+      group_interval: 5s
+      repeat_interval: 5m
+      receiver: 'gmail'
       routes:
-      - receiver: 'null'
+      - receiver: 'gmail'
         matchers:
-          - alertname = "Watchdog"
+          - namespace = "monitoring"
     receivers:
-    - name: 'null'
+    - name: 'gmail'
+      email_configs:
+      - to: eiphuong17@gmail.com
+        from: eiphuong17@gmail.com
+        smarthost: smtp.gmail.com:587
+        auth_username: 'eiphuong17@gmail.com'
+        auth_identity: 'eiphuong17@gmail.com'
+        auth_password: 'aezfehtsbbwlbgxn'
     templates:
     - '/etc/alertmanager/config/*.tmpl'
 
@@ -3638,7 +3645,14 @@ prometheus:
     ## ServiceMonitors to be selected for target discovery.
     ## If {}, select all ServiceMonitors
     ##
-    serviceMonitorSelector: {}
+    serviceMonitorSelector:
+      matchExpressions:
+      - key: app.kubernetes.io/instance
+        operator: In
+        values:
+          - phuongna-service-monitor
+          - nginx-ingress-controller
+          - prometheus-stack
     ## Example which selects ServiceMonitors with label "prometheus" set to "somelabel"
     # serviceMonitorSelector:
     #   matchLabels:
@@ -4524,7 +4538,13 @@ thanosRuler:
     ## PrometheusRules to be selected for target discovery.
     ## If {}, select all PrometheusRules
     ##
-    ruleSelector: {}
+    ruleSelector:
+      matchExpressions:
+        - key: app
+          operator: In
+          values:
+            - phuongna-prometheus-rule
+            - kube-prometheus-stack
     ## Example which select all PrometheusRules resources
     ## with label "prometheus" with values any of "example-rules" or "example-rules-2"
     # ruleSelector:

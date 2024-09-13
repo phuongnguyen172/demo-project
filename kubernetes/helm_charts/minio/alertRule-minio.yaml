@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: phuongna-prometheus-rule #Label này match với cấu hình ruleSelector để nó được load tự động vào Prometheus
+    release: prometheus-grafana-stack
+    role: alert-rules
+  name: phuongna-minio-prometheus-rule #Đây là tên hiển thị trong danh sách PrometheusRule trên K8S
+spec:
+  groups:
+  - name: "phuongna-minio-rule" #Tên Rule hiển thị trên mục Rule của Prometheus trên web Prometheus
+    rules:
+    - alert: MinioDiskOffline #Tên của cảnh báo
+      for: 1m #Thời gian đạt điều kiện trước khi sinh cảnh báo. 
+      expr: minio_cluster_nodes_offline_total != 1 #Điểu kiện so sánh để sinh cảnh báo
+      annotations:
+        message: Minio Disk offline
